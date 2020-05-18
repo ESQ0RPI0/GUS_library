@@ -1,0 +1,92 @@
+﻿@model GUS_book.Models.DetailsUserViewModel
+
+@{
+    ViewData["Title"] = "Описание пользователя";
+}
+
+
+<div>
+    <h2>Информация о пользователе</h2>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        @Html.HiddenFor(model => model.MaxBooks)
+    </dl>
+
+    <hr />
+</div>
+<h2>Книги, прикреплённые к пользователю</h2>
+@Html.ValidationSummary(true, "В результате запроса произошла одна или несколько ошибок:", new {@class = "alert-warning" })
+<div class="parent">
+    @if (Model.Books.Count() == 0)
+    {
+        <div class="child">
+            <text class="alert-info">Список книг пуст</text>
+        </div>
+    }
+    else
+    {
+        @foreach (var book in Model.Books)
+        {
+            <div class="child">
+                <div>
+                    <p class="row col-sm-4"> @Html.DisplayFor(item => book.Author)</p>
+                </div>
+                <div class="list-group-item-secondary">
+                    <p class="row col-sm-4"> @Html.DisplayFor(item => book.Title)</p>
+                </div>
+                <div>
+                    <p class="row col-sm-4"> @Html.DisplayFor(item => book.Year)</p>
+                </div>
+            </div>
+            <hr />
+        }
+    }
+</div>
+
+<div>
+    <a id="editLink" class="btn btn-primary" name="editLink" data-ajax="true">Изменить</a>
+    <a id="backLink" class="btn btn-link" name="backLink" asp-action="Users">Назад к списку пользователей</a>
+</div>
+
+<hr />
+
+<div id="results">
+
+</div>
+
+<div id="loadingDiv" hidden="hidden" class="alert-info">Идёт загрузка...</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+    $('#editLink').ajaxStart(function () {
+        $('#loadingDiv').show();
+        });
+
+        $('#editLink').ajaxStop(function () {
+        $('#loadingDiv').hide();
+        });
+
+        $('#editLink').click(function () {
+        $.ajax(
+            {
+                type: "GET",
+                url: '@Url.RouteUrl(new { controller = "Library", action = "BookList", Id = Url.ActionContext.RouteData.Values["Id"], Mb = Model.MaxBooks })',
+                async: true,
+                cache: false,
+                success: function (result) {
+                    $("#results").html(result);
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+    </script>
+}

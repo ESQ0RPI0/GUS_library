@@ -1,0 +1,50 @@
+﻿
+@model GUS_book.Models.UserBookListViewModel
+
+@using(@Html.BeginForm("BookList", "Library", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.MaxBooks)
+        <table class="table form-group">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BooksForSelection[0].IsSelected)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BooksForSelection[0].Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BooksForSelection[0].Author)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BooksForSelection[0].Year)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i< Model.BooksForSelection.Count; i++)
+                {
+                    <tr>
+                        @Html.HiddenFor(modelItem => Model.BooksForSelection[i].Id)
+                        <td>
+                            @Html.EditorFor(modelItem => Model.BooksForSelection[i].IsSelected)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(modelItem => Model.BooksForSelection[i].Title, null, new { @readonly = "readonly" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(modelItem => Model.BooksForSelection[i].Author, null, new { @readonly = "readonly" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(modelItem => Model.BooksForSelection[i].Year, null, new { @readonly = "readonly" })
+                        </td>
+                        <td>
+                            @Html.HiddenFor(modelItem => Model.BooksForSelection[i].OwnerId )
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <input class="form-group" type="submit" value="Отправить" name="sendBooks" />   
+}
