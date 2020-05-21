@@ -26,7 +26,7 @@ namespace GUS_book
         public IConfiguration Configuration { get; }
        
         public void ConfigureServices(IServiceCollection services)
-        {
+        {           
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<LibraryContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
